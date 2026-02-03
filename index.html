@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For You 💘</title>
+  <style>
+    :root{
+      --bg1:#ffe6f0;
+      --bg2:#fff7fb;
+      --pink:#ff4d88;
+      --pink2:#ff85b0;
+      --text:#2b2b2b;
+    }
+
+    * { box-sizing: border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+      overflow:hidden;
+    }
+
+    .card{
+      width:min(560px, 92vw);
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 28px 22px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.08);
+      text-align:center;
+      position:relative;
+    }
+
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(24px, 4vw, 34px);
+      letter-spacing: .2px;
+    }
+
+    p{
+      margin: 0 0 22px;
+      font-size: clamp(16px, 2.6vw, 18px);
+      opacity: .9;
+      line-height: 1.5;
+    }
+
+    .btns{
+      display:flex;
+      gap: 12px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border: none;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+    }
+    button:active{ transform: scale(0.98); }
+
+    .primary{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:white;
+      font-weight: 700;
+      box-shadow: 0 12px 25px rgba(255,77,136,.25);
+    }
+    .ghost{
+      background: rgba(0,0,0,0.06);
+      color: #333;
+      font-weight: 600;
+    }
+    .primary:hover{ filter: brightness(1.03); }
+    .ghost:hover{ filter: brightness(0.97); }
+
+    /* Steps */
+    .step { display:none; }
+    .step.active{ display:block; }
+
+    /* Photo */
+    .photo{
+      width:min(360px, 80vw);
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+      object-fit: cover;
+      border: 6px solid rgba(255,255,255,0.9);
+      box-shadow: 0 16px 45px rgba(0,0,0,0.12);
+      margin: 10px auto 18px;
+      display:block;
+    }
+
+    /* Floating hearts */
+    .heart{
+      position:absolute;
+      font-size: 18px;
+      opacity: .65;
+      animation: floatUp linear forwards;
+      pointer-events:none;
+    }
+    @keyframes floatUp{
+      from { transform: translateY(20px); opacity: .0; }
+      10% { opacity: .65; }
+      to { transform: translateY(-120vh); opacity: 0; }
+    }
+
+    /* tiny footer text */
+    .tiny{
+      margin-top: 14px;
+      font-size: 12px;
+      opacity: .55;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <!-- STEP 1 -->
+    <section class="step active" id="step1">
+      <h1>Hi jaan 💌</h1>
+      <p>I have something to ask you…</p>
+      <div class="btns">
+        <button class="primary" id="nextBtn">Next 👉</button>
+      </div>
+      <div class="tiny">made with love 💗</div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step" id="step2">
+      <h1>Will you be my Valentine? 💘</h1>
+      <p>(Choose wisely 😌)</p>
+      <div class="btns">
+        <button class="primary" id="yesBtn">YES 💖</button>
+        <button class="ghost" id="noBtn">No 🙃</button>
+      </div>
+      <div class="tiny" id="noHint"></div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" id="step3">
+      <h1>YEAYYYYY 🥰</h1>
+      <img class="photo" src="ourpic.jpeg" alt="Us together" />
+      <p>I love you jaan ❤️</p>
+      <div class="btns">
+        <button class="primary" id="replayBtn">Replay 🔁</button>
+      </div>
+    </section>
+  </div>
+
+<script>
+  const step1 = document.getElementById("step1");
+  const step2 = document.getElementById("step2");
+  const step3 = document.getElementById("step3");
+
+  const nextBtn = document.getElementById("nextBtn");
+  const yesBtn  = document.getElementById("yesBtn");
+  const noBtn   = document.getElementById("noBtn");
+  const replayBtn = document.getElementById("replayBtn");
+  const noHint = document.getElementById("noHint");
+
+  let yesScale = 1;
+
+  function showStep(step){
+    [step1, step2, step3].forEach(s => s.classList.remove("active"));
+    step.classList.add("active");
+  }
+
+  // Hearts effect (optional but cute)
+  function spawnHeart(){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = ["💗","💖","💘","💕","❤️"][Math.floor(Math.random()*5)];
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.bottom = "-10px";
+    const dur = 3 + Math.random() * 2.5;
+    h.style.animationDuration = dur + "s";
+    h.style.fontSize = (14 + Math.random()*20) + "px";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), dur * 1000);
+  }
+
+  nextBtn.addEventListener("click", () => {
+    showStep(step2);
+    // light hearts for transition
+    for (let i=0;i<10;i++) setTimeout(spawnHeart, i*120);
+  });
+
+  noBtn.addEventListener("click", () => {
+    yesScale *= 1.22; // grows forever
+    yesBtn.style.transform = `scale(${yesScale})`;
+    noHint.textContent = "😅 try again...";
+    spawnHeart();
+  });
+
+  yesBtn.addEventListener("click", () => {
+    showStep(step3);
+    // more hearts!
+    for (let i=0;i<30;i++) setTimeout(spawnHeart, i*80);
+  });
+
+  replayBtn.addEventListener("click", () => {
+    yesScale = 1;
+    yesBtn.style.transform = `scale(${yesScale})`;
+    noHint.textContent = "";
+    showStep(step1);
+  });
+</script>
+
+</body>
+</html>
